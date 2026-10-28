@@ -1,7 +1,6 @@
 # Netlify Configuration for KRIDA
 
 [build]
-  base = "frontend"
   publish = "dist"
   command = "npm run build"
   functions = "netlify/functions"
