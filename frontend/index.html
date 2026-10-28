@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" style="background-color: #080909; color: #ffffff;">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="KRIDA - Your AI-Powered Personal Fitness & Sports Coach. RAG-grounded exercise science, periodized workout splits, and adaptive progressive overload." />
+    <title>KRIDA | Your AI-Powered Personal Fitness & Sports Coach</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #080909 !important;
+        color: #ffffff;
+        min-height: 100vh;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      @keyframes kridaPulse {
+        0%, 100% { opacity: 0.6; transform: scale(0.98); }
+        50% { opacity: 1; transform: scale(1); }
+      }
+      @keyframes kridaSpin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body class="bg-[#080909] text-white antialiased">
+    <div id="root">
+      <!-- Instant pre-render fallback with active watchdog protection -->
+      <div id="krida-initial-preloader" style="min-height: 100vh; background-color: #080909; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+        <div style="display: flex; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 32px; font-weight: 900; color: #ffffff; letter-spacing: -0.04em;">KRIDA</span>
+          <span style="font-size: 32px; font-weight: 900; color: #D7FF43; margin-left: 8px; letter-spacing: -0.04em;">AI</span>
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #D7FF43; margin-left: 10px; box-shadow: 0 0 12px #D7FF43;"></span>
+        </div>
+        <div style="font-size: 11px; font-weight: 700; color: #88A8C8; letter-spacing: 0.22em; text-transform: uppercase; font-family: monospace;">
+          INTELLIGENT FITNESS PLATFORM
+        </div>
+        <div style="margin-top: 32px; width: 32px; height: 32px; border-radius: 50%; border: 2.5px solid rgba(215,255,67,0.15); border-top-color: #D7FF43; animation: kridaSpin 0.7s linear infinite;"></div>
+        <div id="krida-initial-status" style="margin-top: 14px; font-size: 11px; font-family: monospace; color: #88A8C8; animation: kridaPulse 1.5s ease-in-out infinite;">
+          Initializing Neural Fitness Engine...
+        </div>
+      </div>
+    </div>
+
+    <!-- Pre-mount watchdog prevents indefinite hang on black screen -->
+    <script>
+      (function() {
+        var fallbackRendered = false;
+        function renderRecovery(errorMsg) {
+          if (fallbackRendered || window.__KRIDA_MOUNTED__) return;
+          var root = document.getElementById('root');
+          if (!root || !document.getElementById('krida-initial-preloader')) return;
+          fallbackRendered = true;
+          root.innerHTML = [
+            '<div style="min-height:100vh;background-color:#080909;color:#ffffff;display:flex;align-items:center;justify-content:center;padding:24px;font-family:system-ui,-apple-system,sans-serif;">',
+              '<div style="max-width:480px;width:100%;background-color:#121618;border:1px solid #3d471d;border-radius:16px;padding:32px;text-align:center;box-shadow:0 0 30px rgba(215,255,67,0.08);">',
+                '<div style="font-size:24px;font-weight:900;color:#ffffff;">KRIDA <span style="color:#D7FF43;">AI</span></div>',
+                '<div style="font-size:11px;color:#88A8C8;letter-spacing:0.2em;text-transform:uppercase;margin-top:4px;font-family:monospace;">Application Initialization</div>',
+                '<div style="margin-top:20px;font-size:15px;font-weight:700;color:#ffffff;">Engine Initialization Notice</div>',
+                '<p style="font-size:12px;color:#88A8C8;line-height:1.6;margin-top:8px;">',
+                  (errorMsg ? ('Diagnostic: ' + errorMsg + '<br/>') : ''),
+                  'Application initialization took longer than expected. Click below to reload or reset cached state.',
+                '</p>',
+                '<div style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">',
+                  '<button onclick="window.location.reload()" style="padding:10px 20px;border-radius:10px;background-color:#D7FF43;color:#080909;font-weight:800;font-size:12px;letter-spacing:0.05em;border:none;cursor:pointer;text-transform:uppercase;">Retry Now</button>',
+                  '<button onclick="try{localStorage.clear();sessionStorage.clear();}catch(e){}window.location.reload();" style="padding:10px 20px;border-radius:10px;background-color:transparent;color:#ffffff;border:1px solid rgba(255,255,255,0.25);font-weight:700;font-size:12px;letter-spacing:0.05em;cursor:pointer;text-transform:uppercase;">Clear Cache &amp; Reset</button>',
+                '</div>',
+              '</div>',
+            '</div>'
+          ].join('');
+        }
+
+        // Global uncaught error listener during boot
+        window.addEventListener('error', function(event) {
+          if (!window.__KRIDA_MOUNTED__) {
+            var msg = (event && event.message) ? event.message : 'Module loading notice';
+            console.warn('[KRIDA Boot Catch]:', msg);
+            renderRecovery(msg);
+          }
+        });
+
+        // Global promise rejection listener during boot
+        window.addEventListener('unhandledrejection', function(event) {
+          if (!window.__KRIDA_MOUNTED__) {
+            var reason = (event && event.reason) ? (event.reason.message || String(event.reason)) : 'Promise timeout';
+            console.warn('[KRIDA Boot Promise Catch]:', reason);
+            renderRecovery(reason);
+          }
+        });
+
+        // 4.5 second watchdog timer
+        setTimeout(function() {
+          if (!window.__KRIDA_MOUNTED__) {
+            renderRecovery('Initialization timeout exceeded');
+          }
+        }, 4500);
+      })();
+    </script>
+
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
